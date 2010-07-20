@@ -7,18 +7,13 @@ package
 
 	public class IGitIt  extends Sprite 
 	{
-
-		[Embed(source="../build/assets/hello_world.png")]
-
-		private var HelloWorldImage : Class;
+        private var context:MainContext;
 
 		public function IGitIt() 
 		{
-			
+            trace("starting");
 			configureStage();
-			
-			var img : Bitmap = addChild(Bitmap(new HelloWorldImage())) as Bitmap;
-			img.x = (stage.stageWidth * .5) - (img.width * .5);			img.y = (stage.stageHeight * .5) - (img.height * .5);
+            context = new MainContext(this);   			
 		}
 
 		private function configureStage() : void 
