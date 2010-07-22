@@ -5,6 +5,7 @@ package
     import flash.net.URLLoader;
     import flash.events.HTTPStatusEvent;
     import flash.events.Event;
+    import flash.events.IOErrorEvent;
     import flash.net.URLRequest;
     import flash.net.URLRequestHeader;
 
@@ -56,6 +57,12 @@ package
     {
         [Inject]
         public var loaded:DataLoaded;
+        
+        [Inject]
+        public var ioFailed:IOFailed;
+
+        [Inject]
+        public var loginFailed:LoginFailed;
 
         private var _user:String, _token:String
 
@@ -76,140 +83,68 @@ package
         {
             _user = user;
             _token = token;
-            _valid = true; //so now, we think this is valid. we'll find out soon enough.
+            _valid = true; 
         }
         /* -work on logged in user- */
 
         public function myInfo():void
         {
-            var args:Object = {username:_user};
-            var calling:String = GitHubAPI.showUser;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling, true, args, event.target.data);
-            }
-            makeAPICall(GitHubAPI.showUser, args, URLRequestMethod.POST, onComplete);
+            makeAPICall(GitHubAPI.showUser, {username:_user}, true);
         }
         
         public function myFollowers():void
         {
-            var args:Object={username:_user};
-            var calling:String=GitHubAPI.followers
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,true,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.POST, onComplete);
+            makeAPICall(GitHubAPI.followers, {username:_user}, true);
         }
 
         public function myFollowing():void
         {
-            var args:Object={username:_user};
-            var calling:String=GitHubAPI.following;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,true,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.POST, onComplete);
+            makeAPICall(GitHubAPI.following, {username:_user}, true);
         }
 
         public function myRepoList():void
         {
-            var args:Object={username:_user};
-            var calling:String=GitHubAPI.repoList;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,true,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.POST, onComplete);
+            makeAPICall(GitHubAPI.repoList, {username:_user}, true);
         }
 
         public function myRepoInfo(repo:String):void
         {
-            var args:Object={};
-            var calling:String=GitHubAPI.repoInfo;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,true,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.POST, onComplete);
+            makeAPICall(GitHubAPI.repoInfo, {username:_user, reponame:repo}, true);
         }
 
         public function showUser(uname:String):void
         {
-            var args:Object={username: uname};
-            var calling:String=GitHubAPI.showUser;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.showUser, {username:uname});
         }
 
         public function searchUser(search:String):void
         {
-            var args:Object={usersearch:search};
-            var calling:String=GitHubAPI.searchUser;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.searchUser, {usersearch:search});
         }
 
         public function followers(uname:String):void
         {
-            var args:Object={username:uname};
-            var calling:String=GitHubAPI.followers;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.followers, {username:uname});
         }
 
         public function following(uname:String):void
         {
-            var args:Object={username:uname};
-            var calling:String=GitHubAPI.following;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.following, {username:uname});
         }
 
         public function repoList(uname:String):void
         {
-            var args:Object={username:uname};
-            var calling:String=GitHubAPI.repoList;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.repoList, {username:uname});
         }
 
         public function repoInfo(uname:String, repo:String):void
         {
-            var args:Object={username: uname, repoName:repo};
-            var calling:String=GitHubAPI.repoInfo;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,false,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.repoInfo, {username:uname, reponame:repo});
         }
 
         public function activityFeed():void
         {
-            var args:Object={username: _user, token: _token};
-            var calling:String=GitHubAPI.activityFeed;
-            var onComplete:Function = function(event:Event):void
-            {
-                loaded.dispatch(calling,true,args,event.target.data);
-            }
-            makeAPICall(calling, args, URLRequestMethod.GET, onComplete);
+            makeAPICall(GitHubAPI.activityFeed, {username:_user, token:_token}, true);
         }
 
         public function updateAll():void
@@ -224,31 +159,40 @@ package
             activityFeed();
         }
 
-        private function onUserConnectComplete(event:Event):void
+        private function makeAPICall(callto:String, args:Object, mine:Boolean = false):void
         {
-            //test that the returned information states that the user is in fact valid
-            _valid = true;
-        }
+            //check that we're valid if we need to be valid.
+            if (mine&& !_valid)
+                throw new InvalidLoginException(_user, _token);
 
-        private function makeAPICall(callto:String, args:Object, method:String = URLRequestMethod.GET, onComplete:Function = null):void
-        {
-            //check that we're valid
-            if (!_valid)
-                return ; //need to send up a notification here
             var loader:URLLoader = new URLLoader();
             var request:URLRequest = new URLRequest(GitHubAPI.getAPI(callto, args));
-            request.method = method;
-
-            //it looks like we always need to add these fields for post. stupid github api
-            if (method == URLRequestMethod.POST)
+            
+            //login information does not (or should not) persist.
+            if (mine && callto != GitHubAPI.activityFeed)
+            {
                 request.data = new URLVariables("login=" + _user + "&token=" + _token);
-            trace(request.url);
+                request.method = URLRequestMethod.POST;
+            }
+            else
+                request.method = URLRequestMethod.GET;
+            //add a event handler that dispatches the signal when the loader completes.
+            var onComplete:Function = function(event:Event):void
+            {
+                loaded.dispatch(callto, request.url, request.method, mine, args, event.target.data);
+            }
+            loader.addEventListener(Event.COMPLETE, onComplete);
+
             //find out how the load is going - partic for auth status
             loader.addEventListener(HTTPStatusEvent.HTTP_STATUS, onReqStatus);
-            //success handler given by method
-            if (onComplete != null)
-                loader.addEventListener(Event.COMPLETE, onComplete);
-            //should add handlers for error results
+            //error handler
+            var onIOError:Function = function(event:IOErrorEvent):void
+            {
+                //message, api call, url, mine, mine, authenticated
+                ioFailed.dispatch(event.text, callto, request.url, mine, args, _valid);
+            }
+            loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+            
             loader.load(request);
         }
 
@@ -258,7 +202,7 @@ package
             {
                 _valid = false; //the credentials are not good.
                 event.target.close(); //huh
-                //throw up that notification like above.
+                loginFailed.dispatch(_user, _token);
             }
         }
     }

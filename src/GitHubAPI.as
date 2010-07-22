@@ -24,7 +24,7 @@ package
             APIS[followers] = "${baseURL}/" + baseAPIURL + "/user/show/${username}/followers";
             APIS[following] = "${baseURL}/" + baseAPIURL + "/user/show/${username}/following";
             APIS[repoList] = "${baseURL}/" + baseAPIURL + "/repos/show/${username}";
-            APIS[repoInfo] = "${baseURL}/" + baseAPIURL + "/repos/show/${username}/${repoName}";
+            APIS[repoInfo] = "${baseURL}/" + baseAPIURL + "/repos/show/${username}/${reponame}";
             APIS[activityFeed] = "${baseURL}/${username}.private.atom?token=${token}";
         }
 

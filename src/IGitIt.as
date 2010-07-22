@@ -13,6 +13,7 @@ package
 		{
             trace("starting");
 			configureStage();
+            buttonMode=true;
             context = new MainContext(this);   			
 		}
 
@@ -21,5 +22,6 @@ package
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 		}
-	}
+    
+    }
 }

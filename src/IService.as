@@ -5,7 +5,7 @@ package
         function get authenticated():Boolean;
         function setLogin(user:String, token:String):void;
 
-        //for the logged in user - i.e. these should be authenticated- i.e. these should be authenticated
+        //for the logged in user - i.e. these should be authenticated
         function myInfo():void;
         function myFollowers():void;
         function myFollowing():void;

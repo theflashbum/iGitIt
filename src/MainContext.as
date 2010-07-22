@@ -5,14 +5,16 @@ package
 
     public class MainContext extends SignalContext
     {
-        public function MainContext(view:DisplayObjectContainer = null, autoStart:Boolean = true)
+        public function MainContext(view:DisplayObjectContainer = null)
         {
-            super(view, autoStart);
+            super(view);
         }
         override public function startup():void
         {
             injector.mapSingletonOf(IService, GitService);
             injector.mapSingleton(DataLoaded);
+            injector.mapSingleton(IOFailed)
+            injector.mapSingleton(LoginFailed);
             mediatorMap.mapView(IGitIt, ApplicationMediator);
 
         }

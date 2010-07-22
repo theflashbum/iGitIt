@@ -15,11 +15,13 @@ package
         {
             /* contains : 
                 api call identifier, 
+                url,
+                method,
                 whether or not this is for the logged in user,
                 args,
                 data
             */
-            super(String, Boolean, Object, String);
+            super(String, String, String, Boolean, Object, String);
         }
     }
 }
