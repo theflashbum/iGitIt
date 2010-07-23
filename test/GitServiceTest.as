@@ -6,7 +6,7 @@ package
     import flash.net.URLRequestMethod;
     
 
-	public class IGitItServiceTest extends EventDispatcher
+	public class GitServiceTest extends EventDispatcher
 	{
         public static const user:String = "";
         public static const tokn:String = "";

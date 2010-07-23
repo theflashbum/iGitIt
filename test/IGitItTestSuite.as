@@ -9,6 +9,8 @@ package
 	public class IGitItTestSuite 
 	{
 
-		public var test1 : IGitItServiceTest;
+		//public var test1 : GitServiceTest;
+		public var modelTest1 : UserModelTest;
+		public var modelTest2 : RepoModelTest;
 	}
 }
