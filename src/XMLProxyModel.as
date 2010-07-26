@@ -12,9 +12,10 @@ package
         public static var TAG:String = null;
         protected var _valid:Boolean = false;
         protected var _reparse:Boolean = false;
-        protected var _data:String;
         protected var _xml:XML;
         protected var _cache:Object;
+
+        protected var _data:String; //maybe this should be made private
 
         public function XMLProxyModel()
         {
@@ -55,7 +56,7 @@ package
             else 
                 return found;
         }
-        
+
         flash_proxy override function getProperty(name:*):*
         {
             if (_reparse)
@@ -113,6 +114,14 @@ package
             }
         }
 
+        public function set xml(newXML:XML):void
+        {
+            _xml = newXML;
+            _cache = new Object(); //reset cache
+            _reparse = false;
+            revalidate();
+        }
+
         protected function revalidate():void
         {
             if (TAG != null && _xml.localName() != TAG)
@@ -124,9 +133,9 @@ package
         public function reparse():void
         {
             _xml = new XML(_data);
-            revalidate();
-            _reparse = false;
             _cache = new Object(); //reset cache
+            _reparse = false;
+            revalidate();
         }
     }
 }

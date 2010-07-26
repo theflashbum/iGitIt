@@ -12,5 +12,6 @@ package
 		//public var test1 : GitServiceTest;
 		public var modelTest1 : UserModelTest;
 		public var modelTest2 : RepoModelTest;
+        public var modelTest3 : RepoStorageTest;
 	}
 }

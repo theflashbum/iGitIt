@@ -32,8 +32,7 @@ package
         override public function reparse():void
         {
             super.reparse();
-            if ("plan" in _xml)
-                _authenticated = true;
+            _authenticated = ("plan" in _xml);
         }
     }
 }
