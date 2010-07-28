@@ -5,8 +5,8 @@ package
     {
         public function IOFailed()
         {
-            //message, api call, url, mine, args, authenticated
-            super(String, String, String, Boolean, Object, Boolean);
+            //message, api call, authenticated
+            super(String, APICall, Boolean);
         }
     }
 }

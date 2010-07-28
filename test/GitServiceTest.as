@@ -85,21 +85,21 @@ package
             service.updateAll();
         }
 
-        protected function loadAllLoginFailed(user:String, token:String):void
+        protected function loadAllLoginFailed(info:Object):void
         {
-            dispatchEvent(new TestEvent(TestEvent.LOGIN_FAILED, {user:user, token:token}));
+            dispatchEvent(new TestEvent(TestEvent.LOGIN_FAILED, info));
         }
 
             //message, api call, url, mine, args, authenticated
-        protected function loadAllIOFailed(msg:String, calling:String, url:String, mine:Boolean, args:Object, valid:Boolean):void
+        protected function loadAllIOFailed(msg:String, apiCall:APICall, valid:Boolean):void
         {
             dispatchEvent(new TestEvent(TestEvent.IO_FAILED, {msg:msg}));
         }
 
-        protected function didLoadForUpdateAll(apiCall:String,url:String, method:String, mine:Boolean,args:Object,data:String):void
+        protected function didLoadForUpdateAll(apiCall:APICall, data:String):void
         {
             loadcalls++;
-            var what:Object= {apiCall:apiCall,url:url,mine:mine,args:args, data:data};
+            var what:Object= {apiCall:apiCall.callId,url:apiCall.url,mine:apiCall.mine,args:apiCall.args, data:data};
             wasLoaded.push(what);
             if (loadcalls >= 5)
             {
@@ -166,21 +166,21 @@ package
             expected.xmlTest(data, expected);
         }
 
-        protected function apiCallLoginFailed(user:String, token:String):void
+        protected function apiCallLoginFailed(info:Object):void
         {
-            dispatchEvent(new TestEvent(TestEvent.LOGIN_FAILED, {user:user, token:token}));
+            dispatchEvent(new TestEvent(TestEvent.LOGIN_FAILED, info));
         }
 
             //message, api call, url, mine, args, authenticated
-        protected function apiCallIOFailed(msg:String, calling:String, url:String, mine:Boolean, args:Object, valid:Boolean):void
+        protected function apiCallIOFailed(msg:String, apiCall:APICall, valid:Boolean):void
         {
             dispatchEvent(new TestEvent(TestEvent.IO_FAILED, {msg:msg}));
         }
 
-        protected function apiCallCompleted(apiCall:String,url:String, method:String, mine:Boolean,args:Object,data:String):void
+        protected function apiCallCompleted(apiCall:APICall,data:String):void
         {
             loadcalls++;
-            var what:Object= {apiCall:apiCall, url:url, mine:mine, method:method, args:args, data:data};
+            var what:Object= {apiCall:apiCall.callId, url:apiCall.url, mine:apiCall.mine, method:apiCall.httpMethod, args:apiCall.args, data:data};
             var loadEvt:TestEvent = new TestEvent(TestEvent.DATA_LOADED, what);
             dispatchEvent(loadEvt);
         }
@@ -414,6 +414,38 @@ package
         {
             var myXML:XML = new XML(data);
             Assert.assertTrue("repository" in myXML);
+            Assert.assertNotNull(myXML.repository.(name=="AntPile"))
+        }
+
+        [Test (async, order=16)]
+        public function testMyWatched():void
+        {
+            prepForCall("watched", {username: user}, GitHubAPI.watched, true, examineMyWatchedXml);
+            service.myWatched();
+
+        }
+
+        protected function examineMyWatchedXml(data:String, expected:Object):void
+        {
+            var myXML:XML = new XML(data);
+            Assert.assertTrue("repository" in myXML);
+            Assert.assertNotNull(myXML.repository.(name=="DeveloperHappyHour"))
+            Assert.assertNotNull(myXML.repository.(name=="AntPile"))
+        }
+
+        [Test (async, order=17)]
+        public function testOtherWatched():void
+        {
+            prepForCall("watched", {username: "theflashbum"}, GitHubAPI.watched, false, examineOtherWatchedXml);
+            service.watched("theflashbum");
+
+        }
+
+        protected function examineOtherWatchedXml(data:String, expected:Object):void
+        {
+            var myXML:XML = new XML(data);
+            Assert.assertTrue("repository" in myXML);
+            Assert.assertNotNull(myXML.repository.(name=="DeveloperHappyHour"))
             Assert.assertNotNull(myXML.repository.(name=="AntPile"))
         }
 	}

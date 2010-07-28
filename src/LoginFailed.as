@@ -5,8 +5,8 @@ package
     {
         public function LoginFailed()
         {
-            //user, token
-            super(String, String);
+            //{user, token}
+            super(Object);
         }
     }
 }

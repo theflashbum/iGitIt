@@ -9,7 +9,6 @@ package
     */
     dynamic public class XMLProxyModel extends Proxy
     {
-        public static var TAG:String = null;
         protected var _valid:Boolean = false;
         protected var _reparse:Boolean = false;
         protected var _xml:XML;
@@ -47,14 +46,47 @@ package
         public function xmlLookup(name:*, node:XML):*
         {
             var fixer:RegExp = /([a-z])([A-Z])/g;
-            var nameConv:String = name.toString().replace(fixer, inserter);
-            var found:XMLList = node.child(nameConv);
+            var nameConv:*;
+            if (name is QName)
+            {
+                var nameStr:String = name.localName.replace(fixer, inserter);
+                var namens:Namespace = new Namespace(name.uri);
+                nameConv = new QName(namens, nameStr);
+            }
+            else
+            {
+                nameConv = name.replace(fixer, inserter);
+            }
+            
+            //var nameConv:QName = new QName(namens, nameStr.replace(fixer, inserter));
+
+            var found:XMLList = node.elements(nameConv);
             if (found.length() == 0)
                 return null;
             else if (found.length() == 1)
                 return found[0];
             else 
                 return found;
+        }
+        
+        protected function convertFoundXML(name:*, found:*):*
+        {
+            if (found == null)
+                return null;
+            else if (found is XML)
+            {
+                var typeAttr:XMLList = found.attribute("type");
+                if (typeAttr.contains("datetime"))
+                    return parseDateString(found);
+                else if (typeAttr.contains("integer"))
+                    return parseInt(found);
+                else if (typeAttr.contains("boolean"))
+                    return found == "true";
+                else
+                    return found as XML;
+            }
+            else if (found is XMLList)
+                return found as XMLList;
         }
 
         flash_proxy override function getProperty(name:*):*
@@ -64,22 +96,7 @@ package
             if (!_cache.hasOwnProperty(name))
             {
                 var found:* = xmlLookup(name, _xml);
-                if (found == null)
-                    return null;
-                else if (found is XML)
-                {
-                    var typeAttr:XMLList = found.attribute("type");
-                    if (typeAttr.contains("datetime"))
-                        _cache[name] = parseDateString(found);
-                    else if (typeAttr.contains("integer"))
-                        _cache[name] = parseInt(found);
-                    else if (typeAttr.contains("boolean"))
-                        _cache[name] = found == "true";
-                    else
-                        _cache[name] = found as XML;
-                }
-                else if (found is XMLList)
-                    _cache[name] = found as XMLList;
+                _cache[name] = convertFoundXML(name, found);
             }
             return _cache[name];
         }
@@ -124,10 +141,7 @@ package
 
         protected function revalidate():void
         {
-            if (TAG != null && _xml.localName() != TAG)
-                _valid = false;
-            else 
-                _valid = true;
+            _valid = false;
         }
 
         public function reparse():void

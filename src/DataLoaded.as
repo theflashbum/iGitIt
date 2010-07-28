@@ -14,14 +14,10 @@ package
         public function DataLoaded()
         {
             /* contains : 
-                api call identifier, 
-                url,
-                method,
-                whether or not this is for the logged in user,
-                args,
+                APICall info,
                 data
             */
-            super(String, String, String, Boolean, Object, String);
+            super(APICall, String);
         }
     }
 }

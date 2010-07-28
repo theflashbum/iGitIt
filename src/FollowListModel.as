@@ -2,13 +2,23 @@ package
 {
     dynamic public class FollowListModel extends XMLArrayModel
     {
-        TAG = "users";
+        public static const TAG:String = "users";
+
+        [Inject]
+        public var users:UserInfoStore;
 
         override public function wrapNode(node:XML, index:Number):*
         {
-            //oh. great. this is going to need to pull from somewhere else.
-            //hit the cache ... what if it's not there?
-            return node.normalize().text()[0].toString();
+            return users.getUser(node); // this will return null if user isn't in there.
+            //if whatever is req'ing gets null, it should probably ask the service to load some data up
+            //because this returns null, this function will be called again the next time that index
+            //is asked for.
+        }
+
+        override protected function revalidate():void
+        {
+            _valid = (_xml.localName() == TAG);
+            super.revalidate();
         }
     }
 }

@@ -120,10 +120,12 @@ package
         [Test]
         public function testRepoListExists():void
         {
+            Assert.assertTrue(repoList.valid);
             Assert.assertEquals(5, repoList.length);
         }
 
-        [Test]
+        [Ignore] //because putting the username in the 
+        [Test]  //repo list model seems pointless
         public function testRepoListUserSet():void
         {
             //var repoName:String = repoList[0];
@@ -165,25 +167,10 @@ package
             for (var i:Number = 0; i < repoList.length; i++)
             {
                 repoName = repoList[i];
-                Assert.assertTrue("on " + i + ":" + repoName + " ", store.hasRepo(repoList.user, repoList[i].name));
-                Assert.assertTrue(store.getRepo(repoList.user, repoList[i].name) is RepoInfoModel);
+                //repolistmodel should accept any list of repositories.
+                Assert.assertTrue("on " + i + ":" + repoName + " ", store.hasRepo(repoList[i].owner, repoList[i].name));
+                Assert.assertTrue(store.getRepo(repoList[i].owner, repoList[i].name) is RepoInfoModel);
             }
         }
-        
-        [Test]
-        public function testNamedRepoLookup():void
-        {
-            var repoName:String;
-            for (var i:Number = 0; i < exampleList.elements().length(); i++)
-            {
-                repoName = exampleList.repository[i].name;
-                //Assert.assertEquals(repoName, repoList[i].name);
-                Assert.assertEquals(exampleList.repository[i].owner, repoList[repoName].owner);
-                Assert.assertEquals(exampleList.repository[i].forks, repoList[repoName].forks);
-
-            }
-
-        }
-
     }
 }

@@ -70,12 +70,13 @@ package
 
         protected function validate(doc:XML):void
         {
-            Assert.assertTrue(model.valid);
+            Assert.assertTrue(RepoInfoModel.TAG, model.valid);
+            Assert.assertEquals(doc.child("description"), model["description"]);
             //not much point, eh?
-            for (var prop:String in doc)
+            for each (var prop:String in doc)
             {
                 if (prop in doc)
-                    Assert.assertEquals(doc.child(prop), model[prop]);
+                    Assert.assertEquals(prop, doc.child(prop), model[prop]);
                 
             }
         }
@@ -83,11 +84,11 @@ package
         [Test]
         public function testTagChecker():void
         {
-            Assert.assertFalse(model.valid);
+            Assert.assertFalse(RepoInfoModel.TAG,model.valid);
             model.data = docStr1;
-            Assert.assertTrue(model.valid);
+            Assert.assertTrue(RepoInfoModel.TAG,model.valid);
             model.data = UserModelTest.docStr1;
-            Assert.assertFalse(model.valid);
+            Assert.assertFalse(RepoInfoModel.TAG,model.valid);
         }
     }
 }

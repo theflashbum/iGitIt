@@ -10,6 +10,7 @@ package
         function myFollowers():void;
         function myFollowing():void;
         function myRepoList():void;
+        function myWatched():void;
         function myRepoInfo(repo:String):void;
 
         function activityFeed():void;
@@ -20,6 +21,7 @@ package
         function followers(uname:String):void;
         function following(uname:String):void;
         function repoList(uname:String):void;
+        function watched(uname:String):void;
         function repoInfo(uname:String, repoName:String):void;
         
         //calls - myInfo, myFollowers, myFollowing, myRepoList, activityFeed.

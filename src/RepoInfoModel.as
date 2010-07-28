@@ -2,7 +2,7 @@ package
 {
     dynamic public class RepoInfoModel extends XMLProxyModel
     {
-        TAG = "repository";
+        public static const TAG:String = "repository";
 
         protected var _complete:Boolean = false;
 
@@ -39,6 +39,11 @@ package
                 _cache.source = oldSource;
                 _complete = true;
             }
+        }
+
+        override protected function revalidate():void
+        {
+            _valid = (_xml.localName() == TAG);
         }
     }
 

@@ -5,19 +5,16 @@ package
     //This junk represents one of them array models.
     dynamic public class XMLArrayModel extends Proxy //XMLProxyModel
     {
-        public static var TAG:String = null;
         protected var _valid:Boolean = false;
         protected var _reparse:Boolean = false;
         protected var _xml:XML;
         protected var _arr:Array;
-        protected var _named:Object;
 
         protected var _data:String; //maybe this should be made private
 
         public function XMLArrayModel()
         {
             _arr = new Array();
-            _named = new Object();
         }
 
         public function get data():String
@@ -39,10 +36,6 @@ package
 
         protected function revalidate():void
         {
-            if (TAG != null && _xml.localName() != TAG)
-                _valid = false;
-            else 
-                _valid = true;
             if (_valid && !_xml.attribute("type").contains("array"))
                 _valid = false;
         }
@@ -51,17 +44,15 @@ package
         {
             if (_reparse)
                 reparse();
-            if (_named.hasOwnProperty(name))
-                name = _named[name];
             var num:Number = Number(name);
-            if (!isNaN(num))
+            if (isNaN(num))
+                return undefined;
+            else
             {
                 if (_arr[num] == null)
                     _arr[num] = wrapNode(_xml.elements()[num], num);
                 return _arr[num];
             }
-            else
-                return undefined;
         }
 
         public function reparse():void

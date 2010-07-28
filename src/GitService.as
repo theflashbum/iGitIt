@@ -38,17 +38,21 @@ package
     myFollowers
     myFollowing
     myRepoList
+    myWatched
 
     activityFeed
     updateAll calls all of above
 
     myRepoInfo
 
+
     showUser
     searchUser
     followers
     following
     repoList
+    watched
+
     repoInfo
 
     */
@@ -107,6 +111,11 @@ package
             makeAPICall(GitHubAPI.repoList, {username:_user}, true);
         }
 
+        public function myWatched():void
+        {
+            makeAPICall(GitHubAPI.watched, {username:_user}, true);
+        }
+
         public function myRepoInfo(repo:String):void
         {
             makeAPICall(GitHubAPI.repoInfo, {username:_user, reponame:repo}, true);
@@ -135,6 +144,11 @@ package
         public function repoList(uname:String):void
         {
             makeAPICall(GitHubAPI.repoList, {username:uname});
+        }
+
+        public function watched(uname:String):void
+        {
+            makeAPICall(GitHubAPI.watched, {username:uname});
         }
 
         public function repoInfo(uname:String, repo:String):void
@@ -176,10 +190,11 @@ package
             }
             else
                 request.method = URLRequestMethod.GET;
+            var apiCall:APICall = new APICall(callto, request.url, request.method, mine, args);
             //add a event handler that dispatches the signal when the loader completes.
             var onComplete:Function = function(event:Event):void
             {
-                loaded.dispatch(callto, request.url, request.method, mine, args, event.target.data);
+                loaded.dispatch(apiCall, event.target.data);
             }
             loader.addEventListener(Event.COMPLETE, onComplete);
 
@@ -189,7 +204,7 @@ package
             var onIOError:Function = function(event:IOErrorEvent):void
             {
                 //message, api call, url, mine, mine, authenticated
-                ioFailed.dispatch(event.text, callto, request.url, mine, args, _valid);
+                ioFailed.dispatch(event.text, apiCall, _valid);
             }
             loader.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
             
@@ -202,7 +217,7 @@ package
             {
                 _valid = false; //the credentials are not good.
                 event.target.close(); //huh
-                loginFailed.dispatch(_user, _token);
+                loginFailed.dispatch({user:_user, token:_token});
             }
         }
     }
