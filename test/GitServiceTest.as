@@ -5,6 +5,9 @@ package
     import flash.events.EventDispatcher;
     import flash.net.URLRequestMethod;
     
+    import models.*;
+    import control.*;
+    import services.*;
 
 	public class GitServiceTest extends EventDispatcher
 	{
@@ -448,5 +451,33 @@ package
             Assert.assertNotNull(myXML.repository.(name=="DeveloperHappyHour"))
             Assert.assertNotNull(myXML.repository.(name=="AntPile"))
         }
-	}
+
+        [Test (async, order=18)]
+        public function testMyRepoCommitList():void
+        {
+            prepForCall("myCommitList", {username: user, reponame: "DeveloperHappyHour"}, GitHubAPI.commitList, true, examineMyCommitList);
+            service.myCommitList("DeveloperHappyHour");
+        }
+
+        protected function examineMyCommitList(data:String, expected:Object):void
+        {
+            var myXML:XML = new XML(data);
+            Assert.assertTrue("commit" in myXML);
+            Assert.assertTrue("more than 1 commit", myXML.commit.length() > 1);
+        }   
+
+        [Test (async, order=19)]
+        public function testOtherRepoCommitList():void
+        {
+            prepForCall("commitList", {username: "theflashbum", reponame: "AntPile"}, GitHubAPI.commitList, false, examineOtherCommitList);
+            service.commitList("theflashbum", "AntPile");
+        }
+
+        protected function examineOtherCommitList(data:String, expected:Object):void
+        {
+            var myXML:XML = new XML(data);
+            Assert.assertTrue("commit" in myXML);
+            Assert.assertTrue("more than 1 commit", myXML.commit.length() > 1);
+        }   
+    }
 }

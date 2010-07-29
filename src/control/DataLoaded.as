@@ -1,4 +1,4 @@
-package
+package control
 {
     import org.osflash.signals.Signal;
     

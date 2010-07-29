@@ -1,6 +1,8 @@
-package
+package control
 {
     import org.robotlegs.mvcs.SignalCommand;
+    import models.*;
+
     public class DataLoadedCommand extends SignalCommand
     {
         [Inject]
@@ -15,37 +17,44 @@ package
         [Inject]
         public var repos:RepoInfoStore;
 
+        [Inject]
+        public var commits:CommitInfoStore;
+
         override public function execute():void
         {
-            if (apiCall.callId == showUser)
+            if (apiCall.callId == GitHubAPI.showUser)
             {
                 handleShowUser();
             }
-            else if (apiCall.callId == searchUser)
+            else if (apiCall.callId == GitHubAPI.searchUser)
             {
                 handleSearchUser();
             }
-            else if (apiCall.callId == followers)
+            else if (apiCall.callId == GitHubAPI.followers)
             {
                 handleFollowers();
             }
-            else if (apiCall.callId == following)
+            else if (apiCall.callId == GitHubAPI.following)
             {
                 handleFollowing();
             }
-            else if (apiCall.callId == repoList)
+            else if (apiCall.callId == GitHubAPI.repoList)
             {
                 handleRepoList();
             }
-            else if (apiCall.callId == watched)
+            else if (apiCall.callId == GitHubAPI.watched)
             {
                 handleWatched();
             }
-            else if (apiCall.callId == repoInfo)
+            else if (apiCall.callId == GitHubAPI.repoInfo)
             {
                 handleRepoInfo();
             }
-            else if (apiCall.callId == activityFeed)
+            else if (apiCall.callId == GitHubAPI.commitList)
+            {
+                handleCommitList();
+            }
+            else if (apiCall.callId == GitHubAPI.activityFeed)
             {
                 handleActivityFeed();
             }
@@ -108,6 +117,19 @@ package
         protected function handleRepoInfo():void
         {
             repos.putRepoData(apiCall.args.username, apiCall.args.reponame, data);
+        }
+
+        protected function handleCommitList():void
+        {
+            if (repos.hasRepo(apiCall.args.username, apiCall.args.reponame))
+            {
+                var model:RepoInfoModel = repos.getRepo(apiCall.args.username, apicall.args.reponame);
+                if (model.commits == null)
+                    model.commits = new CommitListModel();
+                model.commits.repoOwner = model;
+                model.commits.repoName = commits;
+                model.commits.data = data;
+            }
         }
 
         protected function handleActivityFeed():void

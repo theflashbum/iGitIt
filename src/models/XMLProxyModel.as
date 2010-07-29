@@ -1,4 +1,4 @@
-package
+package models
 {
     import flash.utils.Proxy;
     import flash.utils.flash_proxy;
@@ -15,6 +15,7 @@ package
         protected var _cache:Object;
 
         protected var _data:String; //maybe this should be made private
+
 
         public function XMLProxyModel()
         {
@@ -76,12 +77,19 @@ package
             else if (found is XML)
             {
                 var typeAttr:XMLList = found.attribute("type");
+                //var length:Number = found.elements().length();
                 if (typeAttr.contains("datetime"))
                     return parseDateString(found);
                 else if (typeAttr.contains("integer"))
                     return parseInt(found);
                 else if (typeAttr.contains("boolean"))
                     return found == "true";
+                else if (found.elements().length() > 1)
+                {
+                    var container:XMLProxyModel = new XMLProxyModel();
+                    container.xml = found;
+                    return container;
+                }
                 else
                     return found as XML;
             }
@@ -151,5 +159,6 @@ package
             _reparse = false;
             revalidate();
         }
+
     }
 }

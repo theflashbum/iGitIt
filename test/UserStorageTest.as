@@ -5,6 +5,9 @@ package
     import org.flexunit.async.Async;
     import flash.events.EventDispatcher;
     import flash.net.URLRequestMethod;
+    import models.*;
+    import control.*;
+    import services.*;
 
     public class UserStorageTest
     {

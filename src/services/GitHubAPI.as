@@ -1,4 +1,4 @@
-package
+package services
 {
     import com.flashartofwar.utils.TokenUtil;
 
@@ -15,6 +15,7 @@ package
         public static const repoList:String = "repolist";
         public static const watched:String = "watched";
         public static const repoInfo:String = "repoinfo";
+        public static const commitList:String = "commitlist";
         public static const activityFeed:String = "activityfeed";
 
 
@@ -28,6 +29,7 @@ package
             APIS[repoList] = "${baseURL}/" + baseAPIURL + "/repos/show/${username}";
             APIS[watched] = "${baseURL}/" + baseAPIURL + "/repos/watched/${username}";
             APIS[repoInfo] = "${baseURL}/" + baseAPIURL + "/repos/show/${username}/${reponame}";
+            APIS[commitList] = "${baseURL}/" + baseAPIURL + "/commits/list/${username}/${reponame}/master";
             APIS[activityFeed] = "${baseURL}/${username}.private.atom?token=${token}";
         }
 

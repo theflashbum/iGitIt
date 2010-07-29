@@ -1,4 +1,4 @@
-package
+package models
 {
     dynamic public class RepoInfoModel extends XMLProxyModel
     {
@@ -6,6 +6,7 @@ package
 
         protected var _complete:Boolean = false;
 
+        public var commits:CommitListModel;
 
         // does the xml this represents contain the full data for the repository?
         public function get complete():Boolean

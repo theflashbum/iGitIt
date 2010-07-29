@@ -15,5 +15,7 @@ package
         public var modelTest3 : RepoStorageTest;
         public var modelTest4 : UserStorageTest;
         public var modelTest5 : ActivityFeedModelTest;
+        public var modelTest6 : CommitModelTest;
+        public var modelTest7 : CommitStorageTest;
 	}
 }

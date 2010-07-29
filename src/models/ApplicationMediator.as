@@ -1,4 +1,4 @@
-package
+package models
 {
     import org.robotlegs.mvcs.Mediator;
     import flash.events.MouseEvent;

@@ -5,6 +5,9 @@ package
     import org.flexunit.async.Async;
     import flash.events.EventDispatcher;
     import flash.net.URLRequestMethod;
+    import models.*;
+    import control.*;
+    import services.*;
 
     public class RepoStorageTest
     {
@@ -166,9 +169,8 @@ package
             var repoName:String;
             for (var i:Number = 0; i < repoList.length; i++)
             {
-                repoName = repoList[i];
                 //repolistmodel should accept any list of repositories.
-                Assert.assertTrue("on " + i + ":" + repoName + " ", store.hasRepo(repoList[i].owner, repoList[i].name));
+                Assert.assertTrue("on " + i + ":" + repoList[i].name + " ", store.hasRepo(repoList[i].owner, repoList[i].name));
                 Assert.assertTrue(store.getRepo(repoList[i].owner, repoList[i].name) is RepoInfoModel);
             }
         }

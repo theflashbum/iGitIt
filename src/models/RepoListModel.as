@@ -1,4 +1,4 @@
-package
+package models
 {
     //a repo list is associated with a user.
     //hey why don't we make this do the info caching?

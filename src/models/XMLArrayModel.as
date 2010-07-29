@@ -1,4 +1,4 @@
-package
+package models
 {   
     import flash.utils.Proxy;
     import flash.utils.flash_proxy;

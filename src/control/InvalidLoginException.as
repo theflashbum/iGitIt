@@ -1,4 +1,4 @@
-package
+package control
 {
     public class InvalidLoginException extends Error
     {

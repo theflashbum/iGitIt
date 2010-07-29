@@ -2,6 +2,11 @@ package
 {
 	import flexunit.framework.Assert;
     import org.flexunit.async.Async;
+
+    import models.*;
+    import control.*;
+    import services.*;
+    
     public class ActivityFeedModelTest 
     {
         public static const testFeed:XML = 

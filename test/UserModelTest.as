@@ -2,6 +2,9 @@ package
 {
 	import flexunit.framework.Assert;
     import org.flexunit.async.Async;
+    import models.*;
+    import control.*;
+    import services.*;
     public class UserModelTest
     {
         public static const testDoc1:XML = 
@@ -182,13 +185,13 @@ package
                 Assert.assertEquals("invalid collaborators", xml.collaborators, model.collaborators);
                 Assert.assertTrue("collaborators isn't a number", model.collaborators is Number);
                 //plan info
-                Assert.assertEquals("invalid planSpace", xml.plan.space, model.planSpace);
-                Assert.assertTrue("planSpace isn't a number", model.planSpace is Number);
-                Assert.assertEquals("invalid planCollaborators", xml.plan.collaborators, model.planCollaborators);
-                Assert.assertTrue("planCollaborators isn't a number", model.planCollaborators is Number);
-                Assert.assertEquals("invalid planPrivateRepos", xml.plan.child("private-repos"), model.planPrivateRepos);
-                Assert.assertTrue("planPrivateRepos isn't a number", model.planPrivateRepos is Number);
-                Assert.assertEquals("invalid planName", xml.plan.name, model.planName);
+                Assert.assertEquals("invalid planSpace", xml.plan.space, model.plan.space);
+                Assert.assertTrue("planSpace isn't a number", model.plan.space is Number);
+                Assert.assertEquals("invalid planCollaborators", xml.plan.collaborators, model.plan.collaborators);
+                Assert.assertTrue("planCollaborators isn't a number", model.plan.collaborators is Number);
+                Assert.assertEquals("invalid planPrivateRepos", xml.plan.child("private-repos"), model.plan.privateRepos);
+                Assert.assertTrue("planPrivateRepos isn't a number", model.plan.privateRepos is Number);
+                Assert.assertEquals("invalid planName", xml.plan.name, model.plan.name);
             }
             else
                 Assert.assertFalse("invalid authenticated", model.authenticated);

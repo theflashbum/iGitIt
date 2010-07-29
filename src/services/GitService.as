@@ -1,7 +1,8 @@
-package
+package services
 {
     import org.robotlegs.mvcs.Actor;
 
+    import control.*;
     import flash.net.URLLoader;
     import flash.events.HTTPStatusEvent;
     import flash.events.Event;
@@ -14,7 +15,6 @@ package
     import flash.net.URLVariables;
 
     /*
-    TODO
     calls for getting each piece of xml we need
     add login info (user + token, through http auth) to any call that occurs while not logged in
     master call to download all xml
@@ -121,6 +121,11 @@ package
             makeAPICall(GitHubAPI.repoInfo, {username:_user, reponame:repo}, true);
         }
 
+        public function myCommitList(repo:String):void
+        {
+            makeAPICall(GitHubAPI.commitList, {username:_user, reponame:repo}, true);
+        }
+
         public function showUser(uname:String):void
         {
             makeAPICall(GitHubAPI.showUser, {username:uname});
@@ -154,6 +159,11 @@ package
         public function repoInfo(uname:String, repo:String):void
         {
             makeAPICall(GitHubAPI.repoInfo, {username:uname, reponame:repo});
+        }
+
+        public function commitList(uname:String, repo:String):void
+        {
+            makeAPICall(GitHubAPI.commitList, {username:uname, reponame:repo});
         }
 
         public function activityFeed():void

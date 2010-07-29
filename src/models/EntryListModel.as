@@ -1,4 +1,4 @@
-package
+package models
 {
     public class EntryListModel extends XMLArrayModel
     {

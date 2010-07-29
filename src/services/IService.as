@@ -1,4 +1,4 @@
-package
+package services
 {
     public interface IService
     {
@@ -12,6 +12,7 @@ package
         function myRepoList():void;
         function myWatched():void;
         function myRepoInfo(repo:String):void;
+        function myCommitList(repo:String):void;
 
         function activityFeed():void;
 
@@ -23,6 +24,7 @@ package
         function repoList(uname:String):void;
         function watched(uname:String):void;
         function repoInfo(uname:String, repoName:String):void;
+        function commitList(uname:String, repoName:String):void;
         
         //calls - myInfo, myFollowers, myFollowing, myRepoList, activityFeed.
         function updateAll():void;

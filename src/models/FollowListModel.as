@@ -1,4 +1,4 @@
-package
+package models
 {
     dynamic public class FollowListModel extends XMLArrayModel
     {
