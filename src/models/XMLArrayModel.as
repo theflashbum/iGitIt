@@ -87,14 +87,12 @@ package models
             }
         }
 
-        /*
         public function set xml(newXML:XML):void
         {
             _xml = newXML;
             _arr = new Array(_xml.elements().length());
-            _named = new Object();
             _reparse = false;
             revalidate();
-        }*/
+        }
     }
 }

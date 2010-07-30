@@ -1,11 +1,7 @@
 package  
 {
-	//import com.flashartofwar.flashtdd.FlashTDDProjectTest;
-
 	[Suite]
-
 	[RunWith("org.flexunit.runners.Suite")]
-
 	public class IGitItTestSuite 
 	{
 
@@ -17,5 +13,6 @@ package
         public var modelTest5 : ActivityFeedModelTest;
         public var modelTest6 : CommitModelTest;
         public var modelTest7 : CommitStorageTest;
+        public var test2:ActivityGraphTest;
 	}
 }

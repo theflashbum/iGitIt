@@ -1,5 +1,6 @@
 package control
 {
+    import services.APICall;
     import org.osflash.signals.Signal;
     public class IOFailed extends Signal
     {

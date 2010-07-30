@@ -7,6 +7,12 @@ package
     import control.*;
     import services.*;
 
+    import org.hamcrest.*;
+    import org.hamcrest.collection.*;
+    import org.hamcrest.core.*;
+    import org.hamcrest.object.*;
+    import org.hamcrest.date.*;
+
     public class CommitModelTest
     {
         public static const testCommit:XML = 
@@ -55,30 +61,30 @@ package
 
         protected function validate(xml:XML):void
         {
-            Assert.assertTrue(model.valid);
+            assertThat(model.valid, equalTo(true));
             
-            Assert.assertEquals(xml.url, model.url);
-            Assert.assertEquals(xml.id, model.id);
-            Assert.assertEquals(xml.tree, model.tree);
-            Assert.assertEquals(xml.message, model.message);
+            assertThat(model.url, equalTo(xml.url));
+            assertThat(model.id, equalTo(xml.id));
+            assertThat(model.tree, equalTo(xml.tree));
+            assertThat(model.message, equalTo(xml.message));
 
-            Assert.assertTrue(model.committedDate is Date);
-            Assert.assertEquals(model.parseDateString(xml.child("committed-date")).valueOf(), model.committedDate.valueOf());
-            Assert.assertTrue(model.authoredDate is Date);
-            Assert.assertEquals(model.parseDateString(xml.child("authored-date")).valueOf(), model.authoredDate.valueOf());
+            assertThat(model.committedDate, isA(Date));
+            assertThat(model.committedDate, dateEqual(model.parseDateString(xml.child("committed-date"))));
+            assertThat(model.authoredDate, isA(Date));
+            assertThat(model.authoredDate, dateEqual(model.parseDateString(xml.child("authored-date"))));
 
-            Assert.assertEquals(xml.committer.name, model.committer.name);
-            Assert.assertEquals(xml.committer.login, model.committer.login);
-            Assert.assertEquals(xml.committer.email, model.committer.email);
+            assertThat(model.committer.name, equalTo(xml.committer.name));
+            assertThat(model.committer.login, equalTo(xml.committer.login));
+            assertThat(model.committer.email, equalTo(xml.committer.email));
 
-            Assert.assertEquals(xml.author.name, model.author.name);
-            Assert.assertEquals(xml.author.login, model.author.login);
-            Assert.assertEquals(xml.author.email, model.author.email);
+            assertThat(model.author.name, equalTo(xml.author.name));
+            assertThat(model.author.login, equalTo(xml.author.login));
+            assertThat(model.author.email, equalTo(xml.author.email));
             
-            Assert.assertNotNull(model.parents);
-            Assert.assertEquals(3, model.parents.length());
+            assertThat(model.parents, notNullValue());
+            assertThat(model.parents.length(), equalTo(3));
             for (var i:Number = 0; i < 3; i++)
-                Assert.assertEquals(xml.parents.parent.id[i], model.parents[i]);
+                assertThat(model.parents[i], equalTo(xml.parents.parent.id[i]));
         }
     }
 }

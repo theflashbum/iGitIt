@@ -1,6 +1,6 @@
 package
 {
-	import flexunit.framework.Assert;
+    import org.flexunit.Assert;
     import flash.utils.getQualifiedClassName;
     import org.flexunit.async.Async;
     import flash.events.EventDispatcher;

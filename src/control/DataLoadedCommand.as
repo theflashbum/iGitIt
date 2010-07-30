@@ -2,6 +2,7 @@ package control
 {
     import org.robotlegs.mvcs.SignalCommand;
     import models.*;
+    import services.*;
 
     public class DataLoadedCommand extends SignalCommand
     {
@@ -72,46 +73,66 @@ package control
 
         protected function handleFollowers():void
         {
+            var model:UserInfoModel;
             if (users.hasUser(apiCall.args.username))
-            {
-                var model:UserInfoModel = users.getUser(apiCall.args.username);
-                if (model.followers == null)
-                    model.followers = new FollowListModel();
-                model.followers.data = data;
-            }
+                model = users.getUser(apiCall.args.username);
+            else
+                model = users.putUserData(apiCall.args.username, apiCall.mine);
+
+            if (model.followers == null)
+			{
+                model.followers = new FollowListModel();
+				model.followers.users = users;
+			}
+            model.followers.data = data;
         }
 
         protected function handleFollowing():void
         {
+            var model:UserInfoModel;
             if (users.hasUser(apiCall.args.username))
-            {
-                var model:UserInfoModel = users.getUser(apiCall.args.username);
-                if (model.following == null)
-                    model.following = new FollowListModel();
-                model.followers.data = data;
-            }
+                model = users.getUser(apiCall.args.username);
+            else
+                model = users.putUserData(apiCall.args.username, apiCall.mine);
+
+            if (model.following == null)
+			{
+                model.following = new FollowListModel();
+				model.following.users = users;
+			}
+            model.followers.data = data;
         }
 
         protected function handleRepoList():void
         {
+            var model:UserInfoModel;
             if (users.hasUser(apiCall.args.username))
-            {
-                var model:UserInfoModel = users.getUser(apiCall.args.username);
-                if (model.repoList == null)
-                    model.repoList = new RepoListModel();
-                model.repoList.data = data;
-            }
+                model = users.getUser(apiCall.args.username);
+            else
+                model = users.putUserData(apiCall.args.username, apiCall.mine);
+
+            if (model.repoList == null)
+			{
+                model.repoList = new RepoListModel();
+				model.repoList.repos = repos;
+			}
+            model.repoList.data = data;
         }
 
         protected function handleWatched():void
         {
+            var model:UserInfoModel;
             if (users.hasUser(apiCall.args.username))
-            {
-                var model:UserInfoModel = users.getUser(apiCall.args.username);
-                if (model.watched == null)
-                    model.watched = new RepoListModel();
-                model.watched.data = data;
-            }
+                model = users.getUser(apiCall.args.username);
+            else
+                model = users.putUserData(apiCall.args.username, apiCall.mine);
+
+            if (model.watched == null)
+			{
+                model.watched = new RepoListModel();
+				model.watched.repos = repos;
+			}
+            model.watched.data = data;
         }
 
         protected function handleRepoInfo():void
@@ -121,15 +142,22 @@ package control
 
         protected function handleCommitList():void
         {
-            if (repos.hasRepo(apiCall.args.username, apiCall.args.reponame))
+            var model:RepoInfoModel;
+            var owner:String = apiCall.args.username;
+            var name:String = apiCall.args.reponame;
+            if (repos.hasRepo(owner, name))
+                model = repos.getRepo(owner, name);
+            else
+                model = repos.putRepoData(owner, name);
+
+            if (model.commits == null)
             {
-                var model:RepoInfoModel = repos.getRepo(apiCall.args.username, apicall.args.reponame);
-                if (model.commits == null)
-                    model.commits = new CommitListModel();
-                model.commits.repoOwner = model;
-                model.commits.repoName = commits;
-                model.commits.data = data;
+                model.commits = new CommitListModel();
+                model.commits.commits = commits;
             }
+            model.commits.owner = owner;
+            model.commits.name = name;
+            model.commits.data = data;
         }
 
         protected function handleActivityFeed():void

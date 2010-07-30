@@ -1,8 +1,13 @@
 package
 {
-	import flexunit.framework.Assert;
+    import org.flexunit.Assert;
     import flash.utils.getQualifiedClassName;
     import org.flexunit.async.Async;
+
+    import org.hamcrest.*;
+    import org.hamcrest.collection.*;
+    import org.hamcrest.core.*;
+    import org.hamcrest.object.*;
 
     import models.*;
     import control.*;
@@ -107,16 +112,17 @@ package
         [Test]
         public function testValid():void
         {
-            Assert.assertTrue(listModel.valid);
+            assertThat(listModel.valid, equalTo(true));
         }
 
         [Test]
         public function testNodesAreInModel():void
         {
+            assertThat(listModel.length, equalTo(3));
             for (var i:Number = 0; i < listModel.length; i++)
             {
-                Assert.assertNotNull("node " + i, listModel[i]);
-                Assert.assertTrue("node " + i, listModel[i].valid);
+                assertThat(listModel[i], notNullValue());
+                assertThat(listModel[i].valid, equalTo(true));
             }
         }
 
@@ -125,7 +131,7 @@ package
         {
             for (var i:Number=0; i < listModel.length; i++)
             {
-                Assert.assertTrue(getQualifiedClassName(listModel[i]), listModel[i] is CommitInfoModel);
+                assertThat(listModel[i], isA(CommitInfoModel));
             }
         }
 
@@ -134,7 +140,7 @@ package
         {
             for (var i:Number = 0; i < listModel.length; i++)
             {
-                Assert.assertEquals(testList.commit[i].id, listModel[i].id);
+                assertThat(listModel[i].id, equalTo(testList.commit[i].id));
             }
         }
 
@@ -144,8 +150,8 @@ package
             for (var i:Number = 0; i < listModel.length; i++)
             {
                 //repolistmodel should accept any list of repositories.
-                Assert.assertTrue(store.hasCommit(listModel.owner, listModel.name, listModel[i].id));
-                Assert.assertTrue(store.getCommit(listModel.owner, listModel.name, listModel[i].id) is CommitInfoModel);
+                assertThat(store.hasCommit(listModel.owner, listModel.name, listModel[i].id), equalTo(true));
+                assertThat(store.getCommit(listModel.owner, listModel.name, listModel[i].id), isA(CommitInfoModel));
             }
         }
         

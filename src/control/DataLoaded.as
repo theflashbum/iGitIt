@@ -1,6 +1,7 @@
 package control
 {
     import org.osflash.signals.Signal;
+    import services.APICall;
     
     /*
     Signals that some data has been loaded.

@@ -1,6 +1,6 @@
 package
 {
-	import flexunit.framework.Assert;
+    import org.flexunit.Assert;
     import org.flexunit.async.Async;
     import models.*;
     import control.*;
