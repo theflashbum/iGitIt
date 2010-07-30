@@ -22,15 +22,14 @@ package views
         [Inject]
         public var view:IGitIt;
 
-        public var graph:CommitActivityGraph;
-        public var listModel:CommitListModel;
-
         [Inject]
         public var users:UserInfoStore;
         [Inject]
         public var repos:RepoInfoStore;
         [Inject]
         public var commits:CommitInfoStore;
+
+		protected var graphCount:Number = 0;
 
         public static const user:String = "";
         public static const tokn:String = "";
@@ -39,47 +38,48 @@ package views
         {
             trace("onRegister");
             setViewComponent(view);
-            //addViewListener(MouseEvent.CLICK, handleMouseClick);
             loaded.add(showData);
-            //service.setLogin(user, tokn); 
-            view.addStuff();
+            service.setLogin(user, tokn); 
 
-
-            graph = new CommitActivityGraph();
-            view.addChild(graph);
-
-            /*store = new CommitInfoStore();
-            listModel = new CommitListModel();
-            listModel.commits = store;
-            listModel.owner = "theflashbum";
-            listModel.name = "BitmapScroller";
-            */
-            service.commitList("theflashbum", "BitmapScroller");
-
-            var timer:Timer = new Timer(10000, 3);
-            timer.addEventListener(TimerEvent.TIMER, 
-                function(event:TimerEvent):void
-                {
-                    trace("moving it around, changing it up");
-                    graph.x += 10;
-                    graph.y += 10;
-                    graph.maxWidth += 10;
-                    graph.height += 5;
-                    graph.daysBack += 7;
-                    graph.redraw();
-                });
-
-            timer.start();
+			service.updateAll();
         }
 
         public function showData(apiCall:APICall, d:String):void
         {
+			var repoModel:RepoInfoModel;
+			var repoList:RepoListModel;
+			var userModel:UserInfoModel;
             if (apiCall.callId == GitHubAPI.commitList)
             {
-                var repoModel:RepoInfoModel = repos.getRepo(apiCall.args.username, apiCall.args.reponame);
-                graph.commitData = repoModel.commits;
-                graph.redraw();
+                repoModel = repos.getRepo(apiCall.args.username, apiCall.args.reponame);
+				view.addLine(repoModel.owner + "/" + repoModel.name + " last push: " + repoModel.pushedAt, graphCount);
+				view.makeGraph(repoModel.commits, graphCount);
+				graphCount++;
             }   
+			else if (apiCall.callId == GitHubAPI.repoList)
+			{
+				userModel= users.getUser(apiCall.args.username);
+				repoList= userModel.repos;
+				for (var i:Number = 0; i<repoList.length; i++)
+				{
+					repoModel = repoList[i];
+					view.addRepoNameLine(repoModel.owner, repoModel.name, i, true);
+					if (repoModel.commits == null)
+						service.commitList(repoModel.owner, repoModel.name);
+				}
+			}
+			else if (apiCall.callId == GitHubAPI.watched)
+			{
+				userModel= users.getUser(apiCall.args.username);
+				repoList= userModel.watched;
+				for (i = 0; i<repoList.length; i++)
+				{
+					repoModel = repoList[i];
+					view.addRepoNameLine(repoModel.owner, repoModel.name, i, false);
+					if (repoModel.commits == null)
+						service.commitList(repoModel.owner, repoModel.name);
+				}
+			}
         }
     }
 }

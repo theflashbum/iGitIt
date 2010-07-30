@@ -14,12 +14,12 @@ package models
         
         public function getUser(name:String):UserInfoModel
         {
-            return _store[name];
+            return _store != null ? _store[name] : null;
         }
 
         public function hasUser(name:String):Boolean
         {
-            return  _store.hasOwnProperty(name);
+            return  _store != null && _store.hasOwnProperty(name);
         }
 
         public function putUserData(user:String, mine:Boolean, stringData:String = null, xmlData:XML = null):UserInfoModel

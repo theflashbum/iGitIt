@@ -100,7 +100,7 @@ package control
                 model.following = new FollowListModel();
 				model.following.users = users;
 			}
-            model.followers.data = data;
+            model.following.data = data;
         }
 
         protected function handleRepoList():void
@@ -111,12 +111,12 @@ package control
             else
                 model = users.putUserData(apiCall.args.username, apiCall.mine);
 
-            if (model.repoList == null)
+            if (model.repos == null)
 			{
-                model.repoList = new RepoListModel();
-				model.repoList.repos = repos;
+                model.repos = new RepoListModel();
+				model.repos.repos = repos;
 			}
-            model.repoList.data = data;
+            model.repos.data = data;
         }
 
         protected function handleWatched():void

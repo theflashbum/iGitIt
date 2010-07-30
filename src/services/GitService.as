@@ -180,6 +180,7 @@ package services
             myFollowers();
             myFollowing();
             myRepoList();
+            myWatched();
             activityFeed();
         }
 
