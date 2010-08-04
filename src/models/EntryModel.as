@@ -1,6 +1,6 @@
 package models
 {
-    public class EntryModel extends XMLProxyModel
+    dynamic public class EntryModel extends XMLProxyModel
     {
         public static const TAG:String="entry"; 
         public static const mediaNS:Namespace = new Namespace("http://search.yahoo.com/mrss/");

@@ -21,6 +21,9 @@ package control
         [Inject]
         public var commits:CommitInfoStore;
 
+		[Inject]
+		public var activityFeed:ActivityFeedModel;
+
         override public function execute():void
         {
             if (apiCall.callId == GitHubAPI.showUser)
@@ -163,6 +166,7 @@ package control
         protected function handleActivityFeed():void
         {
             //...
+			activityFeed.data = data;
         }
 
     }

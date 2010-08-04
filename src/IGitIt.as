@@ -11,10 +11,12 @@ package
 
 	public class IGitIt  extends Sprite 
 	{
-        private var context:MainContext;
+        public var context:MainContext;
 		
 		protected var hasFirstLined:Boolean = false;
 		protected var defTextLen:Number = 0;
+
+		public var feedList:ActivityFeedView;
 
 		public function IGitIt() 
 		{
@@ -22,6 +24,13 @@ package
 			configureStage();
             buttonMode=true;
             context = new MainContext(this);
+		}
+
+		public function addChildren():void
+		{
+			feedList = new ActivityFeedView();
+			addChild(feedList);
+
 		}
 
         public function addLine(text:String, count:Number) : void
@@ -40,8 +49,8 @@ package
 			var graph:CommitActivityGraph = new CommitActivityGraph();
 			addChild(graph);
 			graph.commitData = commitData;
-			graph.width *= 2;
-			graph.daysBack*= 2;
+			graph.maxWidth *= 2;
+			graph.daysBack *= 2;
 			graph.redraw();
 			graph.x = 400;
 			graph.y = count*(defTextLen + 20 + 5);

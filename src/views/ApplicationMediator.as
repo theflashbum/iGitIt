@@ -36,9 +36,10 @@ package views
 
         override public function onRegister():void
         {
-            trace("onRegister");
-            setViewComponent(view);
+            trace("ApplicationMediator onRegister");
+            //setViewComponent(view);
             loaded.add(showData);
+			view.addChildren();
             service.setLogin(user, tokn); 
 
 			service.updateAll();

@@ -9,23 +9,34 @@ package
 
     public class MainContext extends SignalContext
     {
-        public function MainContext(view:DisplayObjectContainer = null)
+		public function MainContext(contextView:DisplayObjectContainer)
         {
-            super(view);
-        }
-        override public function startup():void
+			super(contextView);
+		}
+ 
+		override public function startup():void
         {
             injector.mapSingleton(UserInfoStore);
             injector.mapSingleton(RepoInfoStore);
             injector.mapSingleton(CommitInfoStore);
 
+			//this will have to change when LocalDBService is added.
             injector.mapSingletonOf(IService, GitService);
+
             //injector.mapSingleton(DataLoaded);
             signalCommandMap.mapSignalClass(DataLoaded, DataLoadedCommand);
-            injector.mapSingleton(IOFailed)
-            injector.mapSingleton(LoginFailed);
-            mediatorMap.mapView(IGitIt, ApplicationMediator);
 
+			//these might need handlers?
+            injector.mapSingleton(IOFailed);
+            injector.mapSingleton(LoginFailed);
+			
+			injector.mapSingleton(ActivityFeedModel);
+			
+			//more views, more mediators.
+			mediatorMap.mapView(ActivityFeedView, ActivityFeedMediator);
+
+			//this needs to be the last mediator mapped.
+            mediatorMap.mapView(IGitIt, ApplicationMediator);
         }
     }
 }
